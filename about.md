@@ -4,12 +4,11 @@ title: About
 ---
 ## About {{ site.name }}
 
-<img class="user-avatar" src="{{ site.owner.avatar }}">
+<!-- <img class="user-avatar" src="{{ site.owner.avatar }}"> -->
 
-White Paper is a very clean theme and used by users around the globe.
-It aims to be clean and really fast. Jekyll is a pretty neat platform for generating websites and applications. The effort required to setup this blog is minimal but the effect is visible from the day one.
+We are working on releasing the artifacts for NSDI '23 paper "Understanding the impact of host networking elements on traffic bursts".
 
-If you are visiting this page, it means you have configured it right and all you need to do now is to start blogging.
+Please reach us at "erfan[at]cs.jhu.edu" with any questions!
 
 <div class="pagination">
   {% if site.owner.linkedin %}
