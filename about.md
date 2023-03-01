@@ -6,9 +6,7 @@ title: About
 
 <!-- <img class="user-avatar" src="{{ site.owner.avatar }}"> -->
 
-We are working on releasing the artifacts for NSDI '23 paper "Understanding the impact of host networking elements on traffic bursts".
-
-Please reach us at "erfan[at]cs.jhu.edu" with any questions!
+More info on how to deploy Valinor framework will be posted here!
 
 <div class="pagination">
   {% if site.owner.linkedin %}
