@@ -3,17 +3,83 @@ layout: default
 title: Valinor framework home
 ---
 
+<h2>Motivation</h2>
 <p>
-The super repository containing artifacts for NSDI '23 paper "Understanding the impact of host networking elements on traffic bursts" can be found <a href="https://github.com/hopnets/valinor-artifacts">here!</a>
-<br><br>
-Valinor framework offers visibility into traffic burstiness over a wide span of timescales (nanosecond- to second-scale) at multiple vantage points.
-<br><br>
-We will update this webpage with Valinor's exiting findings!
-<br><br>
-Please reach the authors with any questions.
+  &diams; <b>What</b> causes the network traffic to emerge from hosts in <b>bursts?</b> <br><br>
+  &diams; Is burstiness an <b>scale-invariant</b> property of traffic? (Does the traffic retain its burstiness across a wide range of timescales, or do the
+      microbursts become smooth at coarse timescales?) <br><br>
+  &diams; Are canonical burst <b>countermeasures</b> such as TCP pacing and packet scheduling effective in curtailing bursts?
+</p>
+<p>
+  Our study attempts to find an answer for above questions.
+</p>
+<hr/>
+<h2>System</h2>
+<p>
+  <b>Valinor</b> framework offers visibility into traffic burstiness over a wide span of timescales (nanosecond- to second-scale) at multiple vantage points by capturing timestamp and metadata information for incoming/outgoing packets in the network.
 
+  <br><br>
+  Valinor consists of four components:
+  <ol class="val-list-parent">
+    <li class="val-list"><b>Valinor-N:</b> Valinor's programmable data plane based on Tofino architecture. Valinor generates timestamp packets for every incoming packet and sends them to a user-defined port for offline/online analysis.</li>
+    <li class="val-list"><b>Valinor-H:</b> Valinor's eBPF program that connects to tc hook in Linux operating system. Valinor-H uses a userspace control plane to retrieve the timestamps for egress packets and stores the entries in a Redis database.</li>
+    <li class="val-list"><b>Valinor-C:</b> Is a DPDK-based packet processing software that is the endpoint for Valinor-N's timestamp packets. Valinor-C also uses Redis to store the collected timestamp entries for packets</li>
+    <li class="val-list"><b>Valinor-O:</b> Consists of various scripts for processing timestamp entries.</li>
+  </ol>
+  <p>Example deployment scenario: </p>
+  <img src="valinor_setup.png" class="design-figure" alt="Deployment scenario">
+  
+</p>
+<hr/>
+<h2>Results</h2>
+<h3>Congestion Control Variants</h3>
+<p>
+  TCP congestion control variants use different signals to detect congestion in the network. This results in significantly different buffer utilization patterns. Valinor-N can capture the dynamics of switch buffer utilization 
+  at microsecond granularity. <br><br>
+  <img src="8_a_w.png" class="result-figure">
 </p>
 
+<h3>Linux qdiscs in the presense of NIC offloading and scheduling</h3>
+<p>
+  Linux offers a modular platform for implementing various packet scheduling paradigms, called queueing disciplines or in short, <em>qdiscs</em>.
+  However, are these software elements effecting in shaping the traffic when NIC segmentation offloading and lulti-ring scheduling functions are active?
+  <br><br>
+  We compare two Linux qdiscs, <em>fq</em> and <em>pfifo_fast</em> under four configurations. Our results suggest that low layers of the network stack compromise the traffic shaping efforts of the software packet schedulers:
+  <br><br>
+  <div class="row">
+    <div class="column">
+      <img src="9_a_w.png"  alt="no TSO - single ring" style="width:100%">
+    </div>
+    <div class="column">
+      <img src="9_c_w.png"  alt="TSO - single ring" style="width:100%">
+    </div>
+    </div>
+    <div class="row">
+    <div class="column">
+      <img src="9_d_w.png"  alt="no TSO - multi ring" style="width:100%">
+    </div>
+    <div class="column">
+      <img src="9_b_w.png"  alt="TSO - multi ring" style="width:100%">
+    </div>
+  </div>
+  <!-- <img src="9_a_w.png" class="result-figure">
+  <img src="9_a_w.png" class="result-figure">
+  <img src="9_a_w.png" class="result-figure">
+  <img src="9_a_w.png" class="result-figure"> -->
+</p>
+
+<p>
+  More interesting results on impact of TCP pacing, Linux qdiscs, and process scheduling on packet bursts can be found in our published paper.
+</p>
+
+<hr/>
+<h2>Artifacts and Further Reading</h2>
+<p>
+  The publication can be access at <a href="https://www.usenix.org/conference/nsdi23/presentation/sharafzadeh">NSDI '23 website</a>. <br><br>
+  The super repository containing Valinor artifacts can be found <a href="https://github.com/hopnets/valinor-artifacts">here!</a>. <br><br>
+
+  Please email the authors with your questions and ideas on improving Valinor.
+</p>
 <!-- <div class="pagination">
   {% if site.owner.linkedin %}
     <a href="{{ site.owner.linkedin }}" class="social-media-icons"><i class="fa fa-2x fa-linkedin-square" aria-hidden="true"></i></a>
